@@ -3,67 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vedi Vibe — Стратегическая креативная сессия</title>
+    <title>vedi vibe — стратегическая креативная сессия</title>
     
-    <!-- Подключение шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
     
-    <!-- Подключение Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Подключение React и Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Глобальные стили -->
     <style>
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Inter', sans-serif; }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes spin-reverse {
-            from { transform: rotate(360deg); }
-            to { transform: rotate(0deg); }
-        }
-        /* Плавный скролл */
         html { scroll-behavior: smooth; }
+        
+        @keyframes bloom-glow {
+            0% { filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.2)); opacity: 0.8; }
+            50% { filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.6)); opacity: 1; }
+            100% { filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.2)); opacity: 0.8; }
+        }
+        .animate-bloom {
+            animation: bloom-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes heart-sparkle {
+            0%, 100% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); background-color: #113926; transform: translate(-50%, -50%) scale(1); }
+            50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.9); background-color: #22C55E; transform: translate(-50%, -50%) scale(1.1); }
+        }
+        .animate-heart {
+            animation: heart-sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes arrow-attract {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(8px); }
+        }
+        .animate-btn-arrow {
+            animation: arrow-attract 1.5s ease-in-out infinite;
+        }
+
+        @keyframes button-pulse {
+            0%, 100% { box-shadow: 0 0 0px rgba(17, 57, 38, 0); }
+            50% { box-shadow: 0 0 20px rgba(17, 57, 38, 0.2); }
+        }
+        .animate-btn-glow {
+            animation: button-pulse 3s ease-in-out infinite;
+        }
+
+        .garden-transition {
+            transition: background-color 2500ms cubic-bezier(0.4, 0, 0.2, 1), background-image 2500ms ease;
+        }
     </style>
 </head>
-<body class="bg-[#F9F9F7] text-[#1C1C1A] font-sans selection:bg-[#8A735E] selection:text-white antialiased">
+<body class="bg-[#F8F8F6] text-[#1D1D1B] font-sans selection:bg-[#113926]/20 selection:text-[#113926] antialiased">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Ссылка на Telegram с предзаполненным сообщением
-        const TELEGRAM_LINK = "https://t.me/vedi_irina?text=" + encodeURIComponent("Ирина, добрый день. Хочу обсудить стратегическую сессию по сборке концепции.");
+        const TELEGRAM_LINK = "https://t.me/vedi_irina?text=" + encodeURIComponent("Ирина, добрый день. Хочу обсудить навигацию и сборку концепции.");
+        
+        const MoanaSpiral = ({ isBloomed = false, size = "w-14 h-14" }) => {
+            const strokeColor = isBloomed ? "#113926" : "#8A8A8A";
+            return (
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" 
+                     className={`${size} transition-all duration-1000 ${isBloomed ? 'animate-bloom' : 'opacity-60'}`}>
+                    <path 
+                        d="M50.5,50.5 c0,0 2.8-4.1 6.3-2.1 c4.4,2.5 1.1,9.8-5.3,10.3 c-8.5,0.7-12.8-10.4-8.1-17.5 c6.3-9.5,21.1-6.8,26.4,2.8 c6.9,12.5-4.5,29.4-18.4,31.5 c-18.2,2.7-34.5-13.6-34-31.4 c0.6-23.5,24.5-40,46.5-35.1"
+                        stroke={strokeColor}
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                    />
+                    <path 
+                        d="M50.5,50.5 c0,0 2.8-4.1 6.3-2.1 c4.4,2.5 1.1,9.8-5.3,10.3 c-8.5,0.7-12.8-10.4-8.1-17.5"
+                        stroke={strokeColor}
+                        strokeWidth="0.8"
+                        strokeLinecap="round"
+                        className="opacity-40"
+                    />
+                </svg>
+            );
+        };
 
-        // Минималистичный символ с плавной ротацией орбит
-        const VediVibeLogo = ({ className = "w-12 h-12", light = false }) => (
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-                <circle cx="50" cy="50" r="4" fill="#8A735E" />
-                <path 
-                    d="M20 50C20 33.4315 33.4315 20 50 20" 
-                    stroke={light ? "white" : "#1C1C1A"} strokeWidth="1.5" strokeLinecap="round"
-                    className="origin-center"
-                    style={{ animation: 'spin 40s linear infinite' }} 
-                />
-                <path 
-                    d="M80 50C80 66.5685 66.5685 80 50 80" 
-                    stroke="#8A735E" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="2 6"
-                    className="origin-center"
-                    style={{ animation: 'spin-reverse 60s linear infinite' }}
-                />
-            </svg>
-        );
-
-        // Компонент оптического проявления (FadeIn + Blur)
-        const FadeIn = ({ children, delay = 0, className = "" }) => {
+        const FadeIn = ({ children, delay = 0, className = "", direction = "up" }) => {
             const [isVisible, setIsVisible] = useState(false);
             const ref = useRef(null);
 
@@ -73,7 +97,7 @@
                     ([entry]) => {
                         if (entry.isIntersecting) setIsVisible(true);
                     },
-                    { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+                    { threshold: 0.001, rootMargin: '0px 0px -2% 0px' }
                 );
                 if (currentRef) observer.observe(currentRef);
                 return () => {
@@ -81,471 +105,205 @@
                 };
             }, []);
 
-            return (
-                <div 
-                    ref={ref} 
-                    className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0 blur-none' : 'opacity-0 translate-y-6 blur-md'} ${className}`}
-                    style={{ transitionDelay: `${delay}ms` }}
-                >
-                    {children}
-                </div>
-            );
-        };
-
-        // Рамка фокуса (Focus Frame)
-        const FocusFrame = ({ children, className = "", dark = false }) => {
-            const borderColor = dark ? "border-[#4A4A4A]" : "border-[#8A735E]";
-            return (
-                <div className={`relative p-8 md:p-10 ${className}`}>
-                    <div className={`absolute top-0 left-0 w-4 h-4 border-t border-l ${borderColor} opacity-60 transition-all duration-700 ease-out`}></div>
-                    <div className={`absolute top-0 right-0 w-4 h-4 border-t border-r ${borderColor} opacity-60 transition-all duration-700 ease-out`}></div>
-                    <div className={`absolute bottom-0 left-0 w-4 h-4 border-b border-l ${borderColor} opacity-60 transition-all duration-700 ease-out`}></div>
-                    <div className={`absolute bottom-0 right-0 w-4 h-4 border-b border-r ${borderColor} opacity-60 transition-all duration-700 ease-out`}></div>
-                    {children}
-                </div>
-            );
-        };
-
-        // Блок со световой сеткой (Spotlight Grid)
-        const SpotlightGrid = ({ children, className = "" }) => {
-            const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-            
-            const handleMouseMove = (e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            const getTransform = () => {
+                if (isVisible) return 'translate(0, 0)';
+                switch (direction) {
+                    case 'horizontal': return 'translateX(-15px)';
+                    default: return 'translateY(5px)';
+                }
             };
 
             return (
-                <div 
-                    className={`relative group ${className}`} 
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={() => setMousePos({ x: -1000, y: -1000 })}
-                >
-                    <div 
-                        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"
-                        style={{ 
-                            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(138, 115, 94, 0.08), transparent 40%)` 
-                        }}
-                    ></div>
+                <div ref={ref} className={`transition-all duration-[500ms] ease-out ${isVisible ? 'opacity-100' : 'opacity-0'} ${className}`}
+                    style={{ transitionDelay: `${delay}ms`, transform: getTransform() }}>
                     {children}
-                </div>
-            );
-        };
-
-        // Сквозная линия прогресса сборки
-        const ScrollProgressLine = () => {
-            const [height, setHeight] = useState(0);
-
-            useEffect(() => {
-                const handleScroll = () => {
-                    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-                    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
-                    const windowHeight = scrollHeight - clientHeight;
-                    const scroll = windowHeight > 0 ? scrollTop / windowHeight : 0;
-                    setHeight(scroll * 100);
-                };
-                
-                handleScroll();
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
-
-            return (
-                <div className="fixed left-4 md:left-12 top-0 bottom-0 w-[1px] bg-[#1C1C1A]/10 z-0 hidden md:block mix-blend-multiply">
-                    <div 
-                        className="w-full bg-[#8A735E]" 
-                        style={{ height: `${height}%`, transition: 'height 0.1s ease-out' }}
-                    ></div>
                 </div>
             );
         };
 
         const Section = ({ children, className = "", id = "" }) => (
-            <section id={id} className={`py-20 md:py-32 px-5 md:pl-32 w-full flex justify-center relative z-10 ${className}`}>
-                <div className="w-full max-w-3xl">
+            <section id={id} className={`py-16 md:py-28 px-8 md:pl-48 lg:pl-56 w-full flex justify-center relative z-20 ${className}`}>
+                <div className="w-full max-w-3xl relative z-20">
                     {children}
                 </div>
             </section>
         );
 
-        const Button = ({ children, href = TELEGRAM_LINK, variant = "primary" }) => {
-            const baseStyle = "group relative inline-flex items-center justify-center w-full md:w-auto px-10 py-5 text-lg overflow-hidden transition-all duration-500 cursor-pointer";
-            
-            if (variant === "primary") {
-                return (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className={`${baseStyle} bg-[#1C1C1A] text-white`}>
-                        <span className="absolute inset-0 w-full h-full bg-[#8A735E] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></span>
-                        <span className="relative z-10 flex items-center gap-3 tracking-wide">
-                            {children}
-                            <svg className="w-4 h-4 transform group-hover:translate-x-1 group-hover:scale-110 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </span>
-                    </a>
-                );
-            }
-            
+        const Button = React.forwardRef(({ children, href = TELEGRAM_LINK, isBloomed = false }, ref) => {
             return (
-                <a href={href} target="_blank" rel="noopener noreferrer" className={`${baseStyle} bg-[#8A735E] text-white hover:bg-white hover:text-[#1C1C1A]`}>
-                    <span className="relative z-10 tracking-wide">{children}</span>
+                <a ref={ref} href={href} target="_blank" rel="noopener noreferrer" 
+                   className={`inline-flex items-center justify-center px-10 py-5 bg-[#113926] text-white text-xs md:text-sm tracking-widest uppercase font-medium hover:bg-[#1A4D35] transition-all duration-700 relative z-10 w-full md:w-auto text-center group ${isBloomed ? 'animate-btn-glow' : ''}`}>
+                    <span className={`mr-3 transition-transform duration-500 ${isBloomed ? 'animate-btn-arrow' : 'group-hover:translate-x-1'}`}>→</span>
+                    {children}
                 </a>
             );
-        };
+        });
 
         function App() {
+            const [lineCoords, setLineCoords] = useState({ top: 0, height: 0 });
+            const [dotProgress, setDotProgress] = useState(0);
+            const startRef = useRef(null);
+            const endRef = useRef(null);
+
+            useEffect(() => {
+                const updateMeasurements = () => {
+                    if (startRef.current && endRef.current) {
+                        const startRect = startRef.current.getBoundingClientRect();
+                        const endRect = endRef.current.getBoundingClientRect();
+                        const absoluteTop = startRect.top + window.scrollY;
+                        const absoluteBottom = endRect.top + window.scrollY;
+                        const topOffset = absoluteTop + 16; 
+                        setLineCoords({
+                            top: topOffset,
+                            height: Math.max(0, absoluteBottom + (endRect.height / 2) - topOffset)
+                        });
+                    }
+                };
+                const resizeObserver = new ResizeObserver(updateMeasurements);
+                resizeObserver.observe(document.body);
+                document.fonts.ready.then(updateMeasurements);
+                setTimeout(updateMeasurements, 300);
+                return () => resizeObserver.disconnect();
+            }, []);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+                    setDotProgress(Math.max(0, Math.min(1, progress)));
+                };
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                handleScroll();
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const isAtEnd = dotProgress > 0.98;
+
             return (
-                <div className="relative">
+                <div className={`relative overflow-x-hidden garden-transition ${isAtEnd ? 'bg-[#E2F0D9]' : 'bg-[#F8F8F6]'}`}
+                     style={isAtEnd ? { backgroundImage: 'radial-gradient(circle at bottom, rgba(34, 197, 94, 0.08) 0%, transparent 80%)' } : {}}>
                     
-                    {/* Осязаемая текстура (Film Grain) */}
-                    <div 
-                        className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] mix-blend-multiply" 
-                        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
-                    ></div>
+                    {lineCoords.height > 0 && (
+                        <div className="absolute left-6 md:left-24 lg:left-32 w-[1px] bg-[#D4D4D2] z-50 pointer-events-none"
+                             style={{ top: `${lineCoords.top}px`, height: `${lineCoords.height}px` }}>
+                            <div className="absolute top-0 -left-[27.5px] w-14 h-14 -translate-y-1/2 bg-transparent rounded-full flex items-center justify-center">
+                                <MoanaSpiral />
+                            </div>
+                            <div className="absolute top-full -left-[27.5px] w-14 h-14 -translate-y-1/2 bg-transparent rounded-full flex items-center justify-center">
+                                <MoanaSpiral isBloomed={isAtEnd} />
+                            </div>
+                            <div className={`absolute w-2.5 h-2.5 rounded-full left-0 z-10 transition-all duration-300 ${isAtEnd ? 'animate-heart' : 'bg-[#113926]'}`}
+                                 style={{ top: `${dotProgress * 100}%`, transform: 'translate(-50%, -50%)' }}></div>
+                        </div>
+                    )}
 
-                    <ScrollProgressLine />
-
-                    {/* Экран 1: Hero */}
-                    <Section className="min-h-[95vh] flex flex-col justify-center pt-10">
+                    <Section className="min-h-[100svh] flex flex-col justify-center py-6 md:py-32">
                         <FadeIn delay={0}>
-                            <div className="mb-14">
-                                <VediVibeLogo className="w-16 h-16" />
+                            <div className="mb-6 md:mb-16">
+                                <p className="uppercase tracking-[0.15em] text-[10px] md:text-xs font-medium text-[#8A8A8A] mb-1 md:mb-3">веди вайб</p>
+                                <p className="text-[10px] md:text-sm font-light text-[#8A8A8A]">лаборатория живого творчества в эпоху ии</p>
                             </div>
-                            <div className="flex items-center gap-4 mb-8">
-                                <p className="uppercase tracking-widest text-[11px] font-medium text-[#8A735E]">
-                                    Vedi Vibe · творческая лаборатория
-                                </p>
+                            <div ref={startRef}>
+                                <h1 className="font-serif text-[26px] md:text-5xl lg:text-6xl leading-[1.2] md:leading-[1.3] mb-3 md:mb-6 text-[#1D1D1B] tracking-tight">
+                                    <span className="block mb-1 md:mb-2 text-[#1D1D1B]">точка, в которой</span>
+                                    <span className="block mb-1 md:mb-2 text-[#1D1D1B]">вы выбираете,</span>
+                                    <span className="block text-[#1D1D1B]">что именно масштабируете</span>
+                                </h1>
                             </div>
-                            <h1 className="font-serif text-4xl md:text-5xl lg:text-7xl leading-[1.05] mb-10 text-[#1C1C1A] tracking-tight">
-                                Стратегическая <em className="italic text-[#8A735E] pr-2">креативная</em> сессия <br className="hidden lg:block" />
-                                по сборке концепции
-                            </h1>
-                            <p className="text-xl md:text-2xl text-[#4A4A4A] leading-relaxed mb-12 max-w-2xl font-light">
-                                Для экспертов и собственников, у которых есть глубина продукта, но ещё не собрана точная форма: позиционирование, коммуникация, визуальный язык и стиль контента.
-                            </p>
-                            <div>
-                                <Button>Написать в Telegram</Button>
-                            </div>
-                        </FadeIn>
-                    </Section>
-
-                    {/* Экран 2: Проблема */}
-                    <Section className="bg-white border-y border-[#EBEBE6]/60">
-                        <FadeIn>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-[1.15] mb-14 tracking-tight">
-                                Когда у проекта есть глубина, <br className="hidden md:block"/>
-                                но <em className="italic text-[#8A735E] pr-2">нет точной формы</em>
-                            </h2>
-                        </FadeIn>
-                        <ul className="space-y-0 mb-16 relative">
-                            <div className="absolute left-[11px] top-8 bottom-8 w-px bg-[#EBEBE6] hidden md:block"></div>
-                            {[
-                                "Ваш продукт сильнее, чем его внешняя подача.",
-                                "Позиционирование не передаёт уровень мышления, который стоит за проектом.",
-                                "Визуал, контент и коммуникация существуют отдельно друг от друга.",
-                                "Вы уже выросли из стандартной упаковки, но не понимаете, что должно прийти ей на смену."
-                            ].map((text, i) => (
-                                <FadeIn delay={i * 100} key={i}>
-                                    <li className="flex items-start py-6 relative z-10">
-                                        <span className="text-[#8A735E] text-2xl leading-none mt-0.5 mr-6 bg-white py-1">·</span>
-                                        <span className="text-xl md:text-2xl text-[#4A4A4A] font-light leading-relaxed">{text}</span>
-                                    </li>
+                            <p className="font-serif text-lg md:text-3xl text-[#5C5C5A] italic mb-6 md:mb-16">хаос или систему</p>
+                            
+                            <div className="flex flex-col gap-2 md:gap-4 font-light text-base md:text-2xl text-[#1D1D1B] mb-8 md:mb-16 pl-2 md:pl-4">
+                                <FadeIn delay={100}>
+                                    <div>разобрать хаос</div>
                                 </FadeIn>
-                            ))}
-                        </ul>
-                        <FadeIn delay={400}>
-                            <FocusFrame className="bg-[#F9F9F7]">
-                                <p className="text-xl md:text-2xl font-serif leading-relaxed text-[#1C1C1A]">
-                                    Это не проблема качества вашей работы.<br/>
-                                    <span className="text-[#8A735E] italic">Это проблема несобранной концепции.</span>
-                                </p>
-                            </FocusFrame>
+                                <FadeIn delay={200}>
+                                    <svg className="w-3 h-3 md:w-5 md:h-5 text-[#8A8A8A] ml-2 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    </svg>
+                                </FadeIn>
+                                <FadeIn delay={300}>
+                                    <div>собрать опору</div>
+                                </FadeIn>
+                                <FadeIn delay={400}>
+                                    <svg className="w-3 h-3 md:w-5 md:h-5 text-[#8A8A8A] ml-2 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    </svg>
+                                </FadeIn>
+                                <FadeIn delay={500}>
+                                    <div className="text-[#113926] font-medium">масштабировать систему</div>
+                                </FadeIn>
+                            </div>
+
+                            <FadeIn delay={650}>
+                                <div className="w-full md:w-auto inline-flex"><Button>начать навигацию</Button></div>
+                            </FadeIn>
                         </FadeIn>
                     </Section>
 
-                    {/* Экран 3: Для кого */}
                     <Section>
-                        <FadeIn>
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="text-[#8A735E] text-xs tracking-widest uppercase font-medium">Аудитория</span>
-                                <div className="h-px w-12 bg-[#8A735E]/30"></div>
+                        <div className="pl-2 md:pl-4">
+                            <FadeIn>
+                                <p className="text-2xl md:text-3xl font-serif text-[#1D1D1B] leading-relaxed italic mb-8">когда в проекте есть хаос —<br/>вы не переходите на следующий виток</p>
+                                <div className="text-xl md:text-2xl font-light text-[#5C5C5A] leading-relaxed mb-10 space-y-2">
+                                    <p>суть — одна</p><p>транслируете другое</p><p>аудитория считывает третье</p>
+                                </div>
+                            </FadeIn>
+                            <div className="flex flex-wrap items-center gap-3 md:gap-4 font-light text-lg md:text-2xl text-[#1D1D1B] mb-20">
+                                <FadeIn delay={50} className="flex items-center"><span>суть</span></FadeIn>
+                                <FadeIn delay={120} className="flex items-center"><span className="text-[#8A8A8A] relative flex items-center justify-center">→<span className="absolute w-[140%] h-[1.5px] bg-[#8A8A8A] rotate-[-45deg]"></span></span></FadeIn>
+                                <FadeIn delay={190} className="flex items-center"><span>передача</span></FadeIn>
+                                <FadeIn delay={260} className="flex items-center"><span className="text-[#8A8A8A] relative flex items-center justify-center">→<span className="absolute w-[140%] h-[1.5px] bg-[#8A8A8A] rotate-[-45deg]"></span></span></FadeIn>
+                                <FadeIn delay={330} className="flex items-center"><span>восприятие</span></FadeIn>
                             </div>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-tight mb-10 tracking-tight">
-                                Для кого подходит этот формат
-                            </h2>
-                            <p className="text-xl text-[#4A4A4A] mb-12 font-light">
-                                Для экспертов, собственников и создателей, которые:
-                            </p>
-                        </FadeIn>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                            {[
-                                "не ищут «просто красивую упаковку», а хотят точного соответствия между глубиной проекта и его формой;",
-                                "ценят качество, логику, концепцию и зрелую коммуникацию;",
-                                "чувствуют, что проект уже вырос из обычного маркетинга;",
-                                "хотят не хаотичный набор решений, а цельный образ проекта."
-                            ].map((text, i) => (
-                                <FadeIn delay={i * 150} key={i}>
-                                    <FocusFrame className="bg-white h-full border border-transparent hover:border-[#EBEBE6] transition-colors duration-500 group">
-                                        <p className="text-[#4A4A4A] font-light text-lg leading-relaxed group-hover:text-[#1C1C1A] transition-colors duration-500">{text}</p>
-                                    </FocusFrame>
+                            <div className="space-y-16">
+                                <FadeIn>
+                                    <p className="text-xl md:text-2xl font-serif text-[#1D1D1B] italic mb-6 text-[#1D1D1B]">когда вы действуете внутри хаоса</p>
+                                    <div className="text-lg md:text-xl font-light text-[#5C5C5A] leading-relaxed mb-6 space-y-2 pl-4 border-l border-[#D4D4D2]">
+                                        <p>маркетинг</p><p>контент</p><p>продвижение</p>
+                                    </div>
+                                    <FadeIn direction="horizontal" delay={200}><p className="text-xl md:text-2xl text-[#113926] font-medium flex items-center"><span className="mr-3 text-[#8A8A8A]">→</span> усиливаете разрыв</p></FadeIn>
                                 </FadeIn>
-                            ))}
+                                <FadeIn>
+                                    <p className="text-xl md:text-2xl font-serif text-[#1D1D1B] italic mb-6 text-[#1D1D1B]">когда вы меняете исходную логику проекта</p>
+                                    <div className="text-lg md:text-xl font-light text-[#5C5C5A] leading-relaxed mb-6 space-y-2 pl-4 border-l border-[#D4D4D2]">
+                                        <p>разобрать основу</p><p>определить уровень</p><p>собрать систему</p>
+                                    </div>
+                                    <FadeIn direction="horizontal" delay={200}>
+                                        <div className="text-xl md:text-2xl text-[#113926] font-medium flex items-center flex-wrap gap-y-4">
+                                            <span className="mr-3 text-[#8A8A8A]">→</span> 
+                                            <span>переходите на следующий виток</span>
+                                            <div className="ml-4 inline-block translate-y-1">
+                                                <MoanaSpiral size="w-8 h-8 md:w-10 md:h-10" isBloomed={isAtEnd} />
+                                            </div>
+                                        </div>
+                                    </FadeIn>
+                                </FadeIn>
+                            </div>
                         </div>
                     </Section>
 
-                    {/* Экран 4: Что это за услуга */}
-                    <Section className="bg-[#1C1C1A] text-white relative overflow-hidden">
-                        <svg className="absolute -right-64 -top-64 w-[800px] h-[800px] opacity-5 pointer-events-none" viewBox="0 0 100 100" fill="none">
-                            <circle cx="50" cy="50" r="49" stroke="white" strokeWidth="0.2" />
-                            <circle cx="50" cy="50" r="30" stroke="white" strokeWidth="0.2" strokeDasharray="1 2" />
-                        </svg>
-
-                        <FadeIn>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-tight mb-10 text-white tracking-tight">
-                                Что происходит <em className="italic text-[#8A735E] pr-2">в этой работе</em>
-                            </h2>
-                            <p className="text-xl md:text-2xl text-[#A1A1A1] font-light mb-14 leading-relaxed">
-                                Это не коучинг, не маркетинговый аудит и не просто креативный брейншторм. <br/><br/>
-                                Это работа, в которой <span className="text-white font-medium">собирается сама концепция</span> проекта:
-                            </p>
-                        </FadeIn>
-                        <ul className="space-y-6 mb-16">
-                            {[
-                                "что в нём должно считываться,",
-                                "какой образ ему соответствует,",
-                                "какая атмосфера усиливает его смысл,",
-                                "как это перевести в позиционирование, коммуникацию и визуальный язык."
-                            ].map((text, i) => (
-                                <FadeIn delay={i * 100} key={i}>
-                                    <li className="flex items-start text-[#D1D1D1] font-light text-xl">
-                                        <span className="text-[#8A735E] mr-6 mt-1.5">—</span>
-                                        <span className="leading-relaxed">{text}</span>
-                                    </li>
-                                </FadeIn>
-                            ))}
-                        </ul>
-                        <FadeIn delay={400}>
-                            <FocusFrame dark className="bg-[#151514]">
-                                <p className="text-2xl md:text-3xl font-serif text-[#F9F9F7] leading-relaxed italic">
-                                    Итог — не набор идей, а собранная концепция проекта, на которую уже можно опирать сайт, контент, дизайн и дальнейшее развитие.
-                                </p>
-                            </FocusFrame>
-                        </FadeIn>
-                    </Section>
-
-                    {/* Экран 5: Как проходит работа */}
-                    <Section>
-                        <FadeIn>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-tight mb-16 tracking-tight">
-                                Как проходит сборка концепции
-                            </h2>
-                        </FadeIn>
-                        <div className="space-y-8 relative">
-                            <div className="absolute left-8 top-10 bottom-10 w-px bg-[#8A735E]/20 hidden md:block"></div>
-                            {[
-                                { num: "01", title: "Погружение", desc: "Разбираем проект, продукт, текущую коммуникацию и вашу точку развития." },
-                                { num: "02", title: "Диагностика", desc: "Смотрим, что сейчас не совпадает: смысл, образ, визуальная подача, тон и ожидания аудитории." },
-                                { num: "03", title: "Сборка концепции", desc: "Формируем ядро проекта, образ бренда, атмосферу, направление визуального языка и логику коммуникации." },
-                                { num: "04", title: "Перевод в форму", desc: "Собираем опоры, на которые потом можно опереть сайт, контент, дизайн, презентацию и дальнейшую упаковку." }
-                            ].map((step, i) => (
-                                <FadeIn delay={i * 150} key={i}>
-                                    <div className="flex flex-col md:flex-row bg-white relative z-10 group overflow-hidden">
-                                        <div className="md:w-32 flex-shrink-0 bg-[#F9F9F7] md:bg-transparent p-6 md:p-8 flex items-center md:items-start justify-between md:justify-start transition-colors duration-500 group-hover:bg-[#F9F9F7]">
-                                            <span className="text-[#8A735E] font-serif text-3xl italic">{step.num}.</span>
-                                            <div className="w-2 h-2 rounded-full bg-[#8A735E] md:hidden"></div>
-                                        </div>
-                                        <div className="p-6 md:p-8 md:pl-0 border-t md:border-t-0 md:border-l border-[#EBEBE6] flex-grow relative">
-                                            <h3 className="text-2xl font-serif mb-3 text-[#1C1C1A]">{step.title}</h3>
-                                            <p className="text-[#4A4A4A] font-light text-lg leading-relaxed relative z-10">{step.desc}</p>
-                                        </div>
-                                    </div>
-                                </FadeIn>
-                            ))}
-                        </div>
-                    </Section>
-
-                    {/* Экран 6: Что вы получаете (Интеллектуальная Сетка) */}
-                    <Section className="bg-white border-y border-[#EBEBE6]/60 relative overflow-hidden">
-                        <div 
-                            className="absolute inset-0 pointer-events-none opacity-[0.03] z-0"
-                            style={{ 
-                                backgroundImage: `linear-gradient(#1C1C1A 1px, transparent 1px), linear-gradient(90deg, #1C1C1A 1px, transparent 1px)`,
-                                backgroundSize: '40px 40px' 
-                            }}
-                        ></div>
-
-                        <FadeIn className="relative z-10">
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="text-[#8A735E] text-xs tracking-widest uppercase font-medium">Артефакты</span>
-                                <div className="h-px w-12 bg-[#8A735E]/30"></div>
-                            </div>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-tight mb-8 tracking-tight">
-                                Что вы получаете <em className="italic text-[#8A735E] pr-2">в результате</em>
-                            </h2>
-                            <p className="text-xl md:text-2xl text-[#4A4A4A] font-light mb-16 leading-relaxed bg-white/90 inline-block pr-4 backdrop-blur-sm">
-                                Не вдохновение и не список общих советов.<br/>
-                                А собранную концепцию проекта, которую можно сразу использовать в работе.
-                            </p>
-                        </FadeIn>
-                        
-                        <SpotlightGrid className="grid grid-cols-1 md:grid-cols-2 relative z-10 border-t border-l border-[#EBEBE6]/60">
-                            {[
-                                { title: "Ядро позиционирования", desc: "Чёткую формулировку, которая передаёт реальную глубину вашего проекта." },
-                                { title: "Образ проекта", desc: "Понимание, каким должен быть ваш бренд по характеру, впечатлению и смыслу." },
-                                { title: "Атмосферу бренда", desc: "Точное ощущение, которое должен создавать ваш проект." },
-                                { title: "Направление визуального языка", desc: "Понимание, как должны выглядеть сайт, визуал, оформление и подача бренда." },
-                                { title: "Логику коммуникации", desc: "Как говорить о проекте так, чтобы это соответствовало вашему уровню и считывалось вашей аудиторией." },
-                                { title: "Стиль контента", desc: "Какой тон, подача и тип материалов соответствуют вашему проекту." },
-                                { title: "Идеи для постов и смысловых линий", desc: "Темы, рубрики и направления контента, которые продолжают вашу концепцию." },
-                                { title: "Опоры для сайта / презентации", desc: "Какие смыслы, формулировки и акценты нужно выносить в структуру и тексты." },
-                                { title: "Основание для реализации", desc: "Понимание, что дальше делать дизайнеру, команде или нейросетям, чтобы не потерять суть." },
-                                { title: "Концепция в виде структуры", desc: "Чтобы не держать всё в голове, а опираться на ясную систему." }
-                            ].map((item, i) => (
-                                <FadeIn delay={i * 50} key={i} className="h-full">
-                                    <div className="group border-r border-b border-[#EBEBE6]/60 p-8 h-full bg-white/40 hover:bg-white transition-all duration-500 relative">
-                                        <div className="flex items-baseline gap-4 mb-4">
-                                            <span className="text-xs font-medium text-[#8A735E] tracking-widest opacity-60">{(i + 1).toString().padStart(2, '0')}</span>
-                                            <h3 className="text-xl font-serif text-[#1C1C1A]">{item.title}</h3>
-                                        </div>
-                                        <p className="text-[#4A4A4A] font-light leading-relaxed pl-8 relative z-10">{item.desc}</p>
-                                    </div>
-                                </FadeIn>
-                            ))}
-                        </SpotlightGrid>
-                    </Section>
-
-                    {/* Экран 7: Почему обычной упаковки недостаточно */}
-                    <Section>
-                        <FadeIn>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-[1.15] mb-10 tracking-tight">
-                                Почему этого недостаточно просто <em className="italic text-[#8A735E] pr-2">«сделать красиво»</em>
-                            </h2>
-                            <div className="text-xl md:text-2xl text-[#4A4A4A] font-light leading-relaxed mb-10">
-                                Когда у проекта нет собранной концепции, новый визуал, тексты или продвижение могут только усилить хаос. Сначала важно понять:
-                            </div>
-                            <FocusFrame className="bg-white mb-10 group hover:shadow-[0_0_40px_rgba(138,115,94,0.05)] transition-shadow duration-700">
-                                <ul className="space-y-5">
-                                    {[
-                                        "что именно должен передавать проект,",
-                                        "какой образ ему соответствует,",
-                                        "какая атмосфера усиливает его смысл,",
-                                        "как всё это собирается в одну систему."
-                                    ].map((text, i) => (
-                                        <li key={i} className="text-[#1C1C1A] font-light text-xl flex items-center gap-4 group-hover:translate-x-2 transition-transform duration-500" style={{ transitionDelay: `${i * 50}ms` }}>
-                                            <div className="w-1.5 h-1.5 rounded-full bg-[#8A735E] transition-transform duration-500 group-hover:scale-150"></div>
-                                            <span className="leading-relaxed">{text}</span>
-                                        </li>
+                    <Section className="pb-32">
+                        <div className="pl-2 md:pl-4">
+                            <FadeIn>
+                                <p className="text-xl md:text-2xl font-light text-[#5C5C5A] leading-relaxed mb-12">я разбираю логику проекта<br/>определяю уровень автора и аудитории<br/>и собираю концепцию,<br/>которую вы сможете масштабировать</p>
+                                <p className="text-2xl md:text-3xl font-serif text-[#1D1D1B] leading-relaxed italic mb-8">через 2 дня<br/>у вас есть концепция, в которой собраны:</p>
+                                <div className="flex flex-col gap-4 font-light text-xl md:text-2xl text-[#1D1D1B] mb-12">
+                                    {["ясное ядро проекта", "направление развития", "понимание аудитории", "язык коммуникации", "идеи контента", "визуальный код и эстетика"].map((text, i) => (
+                                        <FadeIn delay={i * 60} key={i}><div className="flex items-center group cursor-default text-[#1D1D1B]"><span className="text-[#8A8A8A] mr-4 transition-transform duration-700 group-hover:translate-x-2">→</span>{text}</div></FadeIn>
                                     ))}
-                                </ul>
-                            </FocusFrame>
-                            <p className="font-serif text-2xl md:text-3xl italic text-[#1C1C1A]">
-                                Поэтому работа начинается не с оформления, а с концепции.
-                            </p>
-                        </FadeIn>
-                    </Section>
-
-                    {/* Экран 8: О подходе Ирины */}
-                    <Section className="bg-[#EBEBE6]/40">
-                        <FadeIn>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-tight mb-10 tracking-tight">
-                                Почему я работаю <em className="italic text-[#8A735E] pr-2">именно так</em>
-                            </h2>
-                            <p className="text-xl md:text-2xl text-[#4A4A4A] font-light leading-relaxed mb-12">
-                                Моя сильная сторона — видеть то, что часто остаётся несобранным:
-                            </p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-14">
-                                {[
-                                    "связи между смыслом проекта и его формой,",
-                                    "атмосферу, которая ему соответствует,",
-                                    "образ, который должен считываться,",
-                                    "стиль, который усиливает, а не размывает суть."
-                                ].map((text, i) => (
-                                    <div key={i} className="flex items-start text-[#1C1C1A] font-light text-xl border-t border-[#8A735E]/30 pt-6 leading-relaxed">
-                                        {text}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="bg-white p-8 md:p-12 shadow-sm border border-transparent hover:border-[#8A735E]/20 transition-colors duration-700">
-                                <p className="text-xl md:text-2xl font-serif text-[#1C1C1A] leading-relaxed italic">
-                                    Я не начинаю с шаблонной упаковки. Сначала я собираю саму концепцию — чтобы позиционирование, визуальный язык и контент перестали спорить друг с другом.
-                                </p>
-                            </div>
-                        </FadeIn>
-                    </Section>
-
-                    {/* Экран 9: Формат и стоимость */}
-                    <Section>
-                        <FadeIn>
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="text-[#8A735E] text-xs tracking-widest uppercase font-medium">Условия</span>
-                                <div className="h-px w-12 bg-[#8A735E]/30"></div>
-                            </div>
-                            <h2 className="font-serif text-3xl md:text-5xl leading-tight mb-16 tracking-tight">
-                                Формат и стоимость
-                            </h2>
-                            <div className="space-y-10 mb-16">
-                                <div className="relative pl-8 group">
-                                    <div className="absolute left-0 top-2 w-2 h-2 rounded-full bg-[#1C1C1A] transition-transform duration-500 group-hover:scale-150"></div>
-                                    <div className="absolute left-[3px] top-6 bottom-[-30px] w-px bg-[#EBEBE6]"></div>
-                                    <h3 className="text-2xl font-serif mb-3">Короткое знакомство — бесплатно</h3>
-                                    <p className="text-[#4A4A4A] font-light text-xl leading-relaxed">Короткий разговор, чтобы понять ваш проект и проверить, подходит ли вам этот формат.</p>
                                 </div>
-                                <div className="relative pl-8 group">
-                                    <div className="absolute left-0 top-2 w-2 h-2 rounded-full bg-[#8A735E] transition-transform duration-500 group-hover:scale-150 group-hover:shadow-[0_0_10px_#8A735E]"></div>
-                                    <h3 className="text-2xl font-serif mb-3">Основная сессия — онлайн, 2,5–3 часа</h3>
-                                    <p className="text-[#4A4A4A] font-light text-xl leading-relaxed">После сессии — в течение 2 дней вы получаете собранную концепцию проекта в структурированном виде.</p>
+                                <p className="text-xl md:text-2xl font-light text-[#5C5C5A] leading-relaxed mb-16">эту систему<br/>вы передаёте команде и ии<br/>и больше не держите проект<br/>на себе</p>
+                                <div className="mb-8"><div className="font-sans text-2xl md:text-3xl text-[#1D1D1B]">стоимость 50 000 рублей</div></div>
+                                <div className="flex flex-col items-start gap-4">
+                                    <Button ref={endRef} isBloomed={isAtEnd}>начать навигацию</Button>
+                                    <span className="text-sm font-light text-[#8A8A8A] pl-2 md:pl-4">личный диалог со мной в telegram</span>
                                 </div>
-                            </div>
-                            
-                            <div className="mb-14 p-8 md:p-12 bg-[#F9F9F7] border border-[#EBEBE6] relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-                                <div className="relative z-10">
-                                    <div className="font-serif text-5xl md:text-6xl mb-6 text-[#8A735E] tracking-tight transition-transform duration-500 origin-left group-hover:scale-[1.02]">
-                                        50 000 рублей
-                                    </div>
-                                    <p className="text-[#4A4A4A] font-light text-xl leading-relaxed max-w-xl">
-                                        Это не разовый разговор ради идей. Это работа по сборке концепции проекта, которая помогает избежать месяцев неточных решений.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <Button>Написать в Telegram</Button>
-                        </FadeIn>
-                    </Section>
-
-                    {/* Экран 10: Финальный CTA */}
-                    <Section className="bg-[#1C1C1A] text-white text-center py-32 md:py-40 relative overflow-hidden">
-                        <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] opacity-10 pointer-events-none" viewBox="0 0 100 100" fill="none">
-                            <circle cx="50" cy="50" r="49" stroke="#8A735E" strokeWidth="0.1" />
-                            <circle cx="50" cy="50" r="35" stroke="#8A735E" strokeWidth="0.1" />
-                            <path d="M50 15 A 35 35 0 0 1 85 50" stroke="#8A735E" strokeWidth="0.5" className="origin-center animate-[spin_20s_linear_infinite]" />
-                        </svg>
-
-                        <FadeIn className="relative z-10 flex flex-col items-center">
-                            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight mb-8 text-white tracking-tight">
-                                Начните с <em className="italic text-[#8A735E] pr-2">короткого знакомства</em>
-                            </h2>
-                            <p className="text-xl md:text-2xl text-[#A1A1A1] font-light leading-relaxed mb-16 max-w-2xl mx-auto">
-                                Короткий разговор, чтобы понять контекст вашего проекта и проверить, подходит ли вам этот формат.
-                                <br className="hidden md:block mt-4"/>
-                                Чтобы увидеть, есть ли здесь точное совпадение.
-                            </p>
-                            <div className="mb-24">
-                                <Button variant="secondary">Написать в Telegram</Button>
-                            </div>
-                            
-                            <div className="flex flex-col items-center justify-center opacity-80 mt-10">
-                                <VediVibeLogo className="w-10 h-10 mb-6" light={true} />
-                                <p className="uppercase tracking-widest text-[10px] md:text-xs font-medium text-[#8A735E]">
-                                    Vedi Vibe · творческая лаборатория
-                                </p>
-                            </div>
-                        </FadeIn>
+                            </FadeIn>
+                        </div>
                     </Section>
                 </div>
             );
         }
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
